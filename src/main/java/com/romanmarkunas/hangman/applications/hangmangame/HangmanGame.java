@@ -40,10 +40,7 @@ public class HangmanGame {
 
     public void guess(char c) {
 
-        if (triedBefore(c)) {
-
-            return;
-        }
+        if (triedBefore(c)) return;
 
         char guessChar = Character.toLowerCase(c);
         boolean notGuessed = true;
@@ -58,10 +55,7 @@ public class HangmanGame {
             }
         }
 
-        if (notGuessed) {
-
-            triesLeft--;
-        }
+        if (notGuessed) triesLeft--;
 
         leftChars.remove(Character.valueOf(guessChar));
     }
@@ -72,10 +66,7 @@ public class HangmanGame {
 
         StringBuilder sb = new StringBuilder();
 
-        for (char c : revealedWord) {
-
-            sb.append(c);
-        }
+        for (char c : revealedWord) sb.append(c);
 
         return sb.toString();
     }
