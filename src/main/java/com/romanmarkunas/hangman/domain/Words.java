@@ -26,7 +26,7 @@ public class Words {
 
         if (word != null && validWord(word) && !words.contains(word)) {
 
-            words.add(word);
+            words.add(word.toLowerCase());
         }
     }
 
@@ -42,20 +42,23 @@ public class Words {
 
     public void update(String oldWord, String newWord) {
 
-        if (oldWord != null && newWord != null && validWord(newWord) && !words.contains(newWord)) {
+        if (oldWord != null && newWord != null && validWord(newWord) && !words.contains(newWord.toLowerCase())) {
 
-            int oldIndex = words.indexOf(oldWord);
+            int oldIndex = words.indexOf(oldWord.toLowerCase());
 
             if (oldIndex != -1) {
 
-                words.set(oldIndex, newWord);
+                words.set(oldIndex, newWord.toLowerCase());
             }
         }
     }
 
     public void remove(String word) {
 
-        words.remove(word);
+        if (word != null) {
+
+            words.remove(word.toLowerCase());
+        }
     }
 
     public int count() {
