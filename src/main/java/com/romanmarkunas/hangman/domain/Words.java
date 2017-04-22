@@ -32,7 +32,7 @@ public class Words {
 
     public String get(int index) {
 
-        if (index > words.size()) {
+        if (index >= words.size()) {
 
             return null;
         }
