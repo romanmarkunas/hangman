@@ -7,3 +7,6 @@ domain contains words, which might be used in any word game.
 ## 2) Service
 This layer contains Domain access objects and business wide rules. In this project WordsDAO and random word generator
 will occupy this layer.
+## 3) Applications
+This layer contains application logic (user use cases). In this project we have 3 use cases: hangman game, database
+update and managing page.
