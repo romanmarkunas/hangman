@@ -42,7 +42,7 @@ public class Words {
 
     public void update(String oldWord, String newWord) {
 
-        if (oldWord != null && newWord != null && validWord(newWord)) {
+        if (oldWord != null && newWord != null && validWord(newWord) && !words.contains(newWord)) {
 
             int oldIndex = words.indexOf(oldWord);
 

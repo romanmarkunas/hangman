@@ -33,11 +33,12 @@ public class WordsTest {
         assertEquals(2, testInstance.count());
 
         // test update
-        testInstance.update("elephant", null);
-        testInstance.update(null, "mammoth");
-        testInstance.update("elephant", "mammoth");
-        testInstance.update("rhino", "fairy");
-        testInstance.update("mongoose", "panda*");
+        testInstance.update("elephant", null);      // do not update
+        testInstance.update(null, "mammoth");       // do not update
+        testInstance.update("elephant", "mongoose");// do not update since mongoose already present
+        testInstance.update("elephant", "mammoth"); // update
+        testInstance.update("rhino", "fairy");      // do not update since rhino wasn't in list
+        testInstance.update("mongoose", "panda*");  // do not update since * is a special char
 
         assertTrue("mammoth".equals(testInstance.get(0)));
         assertTrue("mongoose".equals(testInstance.get(1)));
