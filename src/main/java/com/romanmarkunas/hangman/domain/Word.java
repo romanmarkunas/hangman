@@ -1,17 +1,9 @@
 package com.romanmarkunas.hangman.domain;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 /*
  * Simple object that is word for game. Not left as simple String for future extensions, i.e. could contain hint also.
- * No reason to check for String validity here, as when word is retrieved from database, it is safely assumed to be
- * valid.
- *
- * Internal structure is List as it maintains order, which makes it easy for random word retrieval. ArrayList
- * implementation is chosen since it saves time on word retrieval knowing its index, which is the most frequent
- * operation. CUD operations are expected to be rare. - TODO - move to DAO
+ * No reason to check for String validity here, as when word is retrieved from database_mysql, it is safely assumed to
+ * be valid.
  */
 public class Word {
 
