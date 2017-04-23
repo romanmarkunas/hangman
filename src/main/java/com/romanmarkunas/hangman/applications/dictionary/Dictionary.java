@@ -17,6 +17,19 @@ public class Dictionary {
     }
 
 
+    public List<Word> getAllWords() {
+
+        try {
+
+            return wordDao.getWords();
+
+        }
+        catch (DAOException exc) {
+
+            return null;
+        }
+    }
+
     public boolean addWord(String word) {
 
         if (word != null && validWord(word)) {

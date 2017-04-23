@@ -118,4 +118,18 @@ public class DictionaryTest {
 
         assertFalse(testDictionary.removeWord("elephant"));
     }
+
+    @Test
+    public void getAllWordsSuccessful() throws Exception {
+
+        assertTrue(databaseContents == testDictionary.getAllWords());
+    }
+
+    @Test
+    public void getAllWordsDAOException() throws Exception {
+
+        doThrow(DAOException.class).when(daoMock).getWords();
+
+        assertEquals(null, testDictionary.getAllWords());
+    }
 }
