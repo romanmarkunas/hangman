@@ -10,3 +10,7 @@ will occupy this layer.
 ## 3) Applications
 This layer contains application logic (user use cases). In this project we have 3 use cases: hangman game, database
 update and managing page.
+## 4) Infrastructure
+The outermost layer. This layer contains databases, framework related code (I don't like core logic to be dependant on
+framework syntax), controllers, views, etc - basically everything that doesn't affect application logic, subject to
+frequent change or maintained by other department/company developers.
