@@ -45,7 +45,8 @@ public class Dictionary {
                     return true;
                 }
 
-            } catch (DAOException exc) {
+            }
+            catch (DAOException exc) {
 
                 return false;
             }
@@ -72,6 +73,7 @@ public class Dictionary {
             }
             catch (DAOException exc) {
 
+                System.out.println(exc.getMessage());
                 return false;
             }
         }
