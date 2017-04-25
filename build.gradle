@@ -1,3 +1,8 @@
+// prebuild
+plugins {
+    id "com.bmuschko.tomcat-base" version "2.2.5"
+}
+
 // artifact
 group 'com.romanmarkunas'
 version '1.0-SNAPSHOT'
@@ -8,6 +13,8 @@ compileJava {
     sourceCompatibility = '1.8'
 }
 apply plugin: 'findbugs'
+apply plugin: 'war'
+apply plugin: 'com.bmuschko.tomcat'  // to automatically deploy project to local Tomcat
 
 task wrapper(type: Wrapper) {
     gradleVersion = '3.5'
@@ -19,6 +26,15 @@ repositories {
 }
 
 dependencies {
+    compile group: 'com.google.code.findbugs', name: 'annotations', version: '3.0.0'
+    compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.38'
     testCompile group: 'junit', name: 'junit', version: '4.11'
-    testCompile "org.mockito:mockito-core:1.9.5"
+    testCompile 'org.mockito:mockito-core:1.9.5'
+
+    // to automatically deploy project to local Tomcat
+    def tomcatVersion = '8.0.43'
+    tomcat "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}",
+            "org.apache.tomcat.embed:tomcat-embed-logging-juli:${tomcatVersion}",
+//            "org.apache.tomcat.embed:tomcat-embed-logging-juli:'8.5.2'",
+            "org.apache.tomcat.embed:tomcat-embed-jasper:${tomcatVersion}"
 }
