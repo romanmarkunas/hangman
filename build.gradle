@@ -1,3 +1,8 @@
+// prebuild
+plugins {
+    id "com.bmuschko.tomcat-base" version "2.2.5"
+}
+
 // artifact
 group 'com.romanmarkunas'
 version '1.0-SNAPSHOT'
@@ -8,6 +13,8 @@ compileJava {
     sourceCompatibility = '1.8'
 }
 apply plugin: 'findbugs'
+apply plugin: 'war'
+apply plugin: 'com.bmuschko.tomcat'  // to automatically deploy project to local Tomcat
 
 task wrapper(type: Wrapper) {
     gradleVersion = '3.5'
@@ -19,6 +26,21 @@ repositories {
 }
 
 dependencies {
+    compile group: 'com.google.code.findbugs', name: 'annotations', version: '3.0.0'
+    compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.38'
+
+    def springVersion = '4.3.7.RELEASE'
+    compile group: 'org.springframework', name: 'spring-core', version: "${springVersion}"
+    compile group: 'org.springframework', name: 'spring-beans', version: "${springVersion}"
+    compile group: 'org.springframework', name: 'spring-context', version: "${springVersion}"
+    compile group: 'org.springframework', name: 'spring-web', version: "${springVersion}"
+    compile group: 'org.springframework', name: 'spring-webmvc', version: "${springVersion}"
     testCompile group: 'junit', name: 'junit', version: '4.11'
-    testCompile "org.mockito:mockito-core:1.9.5"
+    testCompile 'org.mockito:mockito-core:1.9.5'
+
+    // to automatically deploy project to local Tomcat
+    def tomcatVersion = '8.0.43'
+    tomcat "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}",
+            "org.apache.tomcat.embed:tomcat-embed-logging-juli:${tomcatVersion}",
+            "org.apache.tomcat.embed:tomcat-embed-jasper:${tomcatVersion}"
 }
