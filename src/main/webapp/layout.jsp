@@ -7,11 +7,26 @@
     <title>Hangman game</title>
 </head>
 
-<%@ page import="java.util.Date" %>
-
 <body>
 
-    <p>Current Time is: <%=new Date() %></p>
+    <p>Secret word:</p>
+    <p id="secretWord"></p>
+
+    <p>Your guess:</p>
+    <p id="revealedWord"></p>
+
+    <p>Tries left:</p>
+    <p id="triesLeft"></p>
+
+    <p>Message:</p>
+    <p id="message">Game not started yet</p>
+
+    <form>
+        <input type="text" name="guesschar"><br>
+        <input type="submit" value="Try this letter"><br><br>
+    </form>
+
+    <button type="button">Start new game</button>
 
 </body>
 
