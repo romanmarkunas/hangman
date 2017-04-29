@@ -1,3 +1,7 @@
+# Deployment
+1) Checkout from Git using git clone
+2) 
+
 # Architecture
 Project architecture has 4 layers, similar to Onion architecture. Main idea of architecture is dependency inversion,
 that is the inner layer knows nothing about outer layer.
