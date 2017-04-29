@@ -1,9 +1,15 @@
 package com.romanmarkunas.hangman.applications.hangmangame;
 
+import com.romanmarkunas.hangman.domain.HangmanGameState;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class HangmanGameTest {
 
@@ -94,5 +100,35 @@ public class HangmanGameTest {
         assertTrue(testGame.complete());
         assertFalse(testGame.playerWon());
         assertEquals("_______", testGame.getRevealedWord());
+    }
+
+    @Test
+    public void gameStateInteractions() throws Exception {
+
+        int id = -10;
+        String secret = "razzledazzle";
+        String revealed = "__zz____zz__";
+        int triesLeft = 1;
+        String leftChars = "raled";
+        LocalDateTime testStartDate = LocalDateTime.now();
+
+        HangmanGameState stateMock = mock(HangmanGameState.class);
+
+        when(stateMock.getId()).thenReturn(id);
+        when(stateMock.getSecretWord()).thenReturn(secret);
+        when(stateMock.getRevealedWord()).thenReturn(revealed);
+        when(stateMock.getTriesLeft()).thenReturn(triesLeft);
+        when(stateMock.getNotUsedChars()).thenReturn(leftChars);
+
+        testGame = new HangmanGame(stateMock);
+
+        HangmanGameState resultState = testGame.getGameState();
+
+        assertEquals(id, resultState.getId());
+        assertEquals(secret, resultState.getSecretWord());
+        assertEquals(revealed, resultState.getRevealedWord());
+        assertEquals(triesLeft, resultState.getTriesLeft());
+        assertEquals(leftChars, resultState.getNotUsedChars());
+        assertTrue(resultState.getExpiryDate().isAfter(testStartDate.plus(29, ChronoUnit.MINUTES)));
     }
 }
