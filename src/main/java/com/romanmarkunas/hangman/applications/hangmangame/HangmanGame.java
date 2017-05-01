@@ -2,12 +2,8 @@ package com.romanmarkunas.hangman.applications.hangmangame;
 
 import com.romanmarkunas.hangman.domain.HangmanGameState;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalUnit;
-import java.util.LinkedList;
-import java.util.List;
 
 public class HangmanGame {
 
@@ -19,7 +15,7 @@ public class HangmanGame {
     private int id;
 
 
-    HangmanGame(String secretWord, int tries) {
+    public HangmanGame(String secretWord, int tries) {
 
         this.triesLeft = tries;
         this.charsToGuess = secretWord.length();
@@ -41,7 +37,7 @@ public class HangmanGame {
         this.id = 0;
     }
 
-    HangmanGame(HangmanGameState state) {
+    public HangmanGame(HangmanGameState state) {
 
         this.triesLeft = state.getTriesLeft();
         this.secretWord = state.getSecretWord().toCharArray();
