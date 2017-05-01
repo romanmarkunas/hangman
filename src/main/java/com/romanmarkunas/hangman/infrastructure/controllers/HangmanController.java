@@ -4,10 +4,12 @@ import com.romanmarkunas.hangman.applications.hangmangame.HangmanGame;
 import com.romanmarkunas.hangman.domain.HangmanGameState;
 import com.romanmarkunas.hangman.services.*;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.*;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -66,6 +68,18 @@ public class HangmanController {
         }
 
         return jsonData;
+    }
+
+    @RequestMapping(value="management", method=RequestMethod.GET)
+    public String showManagmenetPage(Model model) throws Exception {
+
+        gameStateDao.removeAllOutdated();
+
+        List<HangmanGameState> games = gameStateDao.getGames();
+
+        model.addAttribute("games", games);
+
+        return "management";
     }
 
 
