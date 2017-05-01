@@ -1,25 +1,30 @@
 package com.romanmarkunas.hangman.infrastructure.controllers;
 
-import com.romanmarkunas.hangman.applications.dictionary.Dictionary;
-import com.romanmarkunas.hangman.infrastructure.database_mysql.MySQLWordDAO;
+import com.romanmarkunas.hangman.applications.hangmangame.HangmanGame;
+import com.romanmarkunas.hangman.services.HangmanGameStateDAO;
+import com.romanmarkunas.hangman.services.RandomWord;
+import com.romanmarkunas.hangman.services.WordDAO;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
 @Controller
 public class HangmanController {
 
-    private static String dbURL = "jdbc:mysql://localhost/hangman";
-    private static String sslURL = "?verifyServerCertificate=true&useSSL=false&requireSSL=false";
-    private static String user = "root";
-    private static String password = "testpass";
+    private HangmanGameStateDAO gameStateDao;
+    private WordDAO wordDao;
+
+
+    public HangmanController(HangmanGameStateDAO gameStateDao, WordDAO wordDao) {
+
+        this.gameStateDao = gameStateDao;
+        this.wordDao = wordDao;
+    }
 
 
     @RequestMapping(value={"", "/", "game"}, method=RequestMethod.GET)
@@ -31,17 +36,26 @@ public class HangmanController {
     // TODO - handle exceptions
     @RequestMapping(value="gamestats", method=RequestMethod.GET, produces="application/json")
     @ResponseBody
-    public Map<String, Object> getGameState() throws SQLException {
+    public Map<String, Object> getGameState(@RequestParam Map<String,String> allRequestParams) throws Exception {
 
-        Connection connection = DriverManager.getConnection(dbURL+sslURL, user, password);
-        MySQLWordDAO wordDao = new MySQLWordDAO(connection);
-        Dictionary dictionary = new Dictionary(wordDao);
+        HangmanGame game;
+        int id = 0;
+        String secretWord = "";
+
+        if (allRequestParams.containsKey("newgame") && "true".equals(allRequestParams.get("newgame"))) {
+
+            secretWord = new RandomWord(wordDao.getWords()).getNext().getString();
+            game = new HangmanGame(secretWord, 5);
+            id = gameStateDao.createNewGame(game.getGameState());
+        }
+        else {
+            game = new HangmanGame("gorilla", 3);
+        }
 
         Map<String, Object> data = new HashMap<>();
-        data.put("words", dictionary.getAllWords());
-        data.put("wordcount", dictionary.getAllWords().size());
-
-        System.out.println("Sending JSON: " + data);
+        data.put("revealed", game.getRevealedWord());
+        data.put("message", "started new game with id: " + id + " and word " + secretWord);
+        data.put("triesleft", game.getTriesLeft());
 
         return data;
     }

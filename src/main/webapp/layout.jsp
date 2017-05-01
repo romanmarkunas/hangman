@@ -14,9 +14,6 @@
 <body>
 
     <p>Secret word:</p>
-    <p id="secretWord"></p>
-
-    <p>Your guess:</p>
     <p id="revealedWord"></p>
 
     <p>Tries left:</p>
@@ -30,18 +27,7 @@
         <input type="submit" value="Try this letter"><br><br>
     </form>
 
-    <button type="button">Start new game</button>
-
-    <br/>
-    <br/>
-
-    <sql:query var="rs" dataSource="jdbc/hangman">
-    select word from words
-    </sql:query>
-
-    <c:forEach var="row" items="${rs.rows}">
-        Available word: ${row.word}<br/>
-    </c:forEach>
+    <button onclick="newGame()">Start new game</button>
 
 </body>
 
@@ -52,16 +38,15 @@
 function updateFields(data) {
 
     console.log("launching updateFields");
-    alert(data.wordcount);
+    $("#revealedWord").text(data.revealed);
+    $("#triesLeft").text(data.triesleft);
+    $("#message").text(data.message);
 }
 
 function newGame() {
 
-    console.log("launching newGame");
-    $.getJSON("${pageContext.request.contextPath}/gamestats", updateFields);
+    $.getJSON("${pageContext.request.contextPath}/gamestats?newgame=true", updateFields);
 }
-
-$(document).ready(newGame);
 
 </script>
 
