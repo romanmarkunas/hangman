@@ -22,10 +22,8 @@
     <p>Message:</p>
     <p id="message">Game not started yet</p>
 
-    <form>
-        <input type="text" name="guesschar"><br>
-        <input type="submit" value="Try this letter"><br><br>
-    </form>
+    <p> <input type="text" id="guessChar">
+        <button onclick="guess()">Guess letter</button> </p>
 
     <button onclick="newGame()">Start new game</button>
 
@@ -37,16 +35,38 @@
 
 function updateFields(data) {
 
-    console.log("launching updateFields");
-    $("#revealedWord").text(data.revealed);
-    $("#triesLeft").text(data.triesleft);
-    $("#message").text(data.message);
+    if (data.hasOwnProperty("revealed")) {
+
+        $("#revealedWord").text(data.revealed);
+    }
+
+    if (data.hasOwnProperty("triesleft")) {
+
+        $("#triesLeft").text(data.triesleft);
+    }
+
+    if (data.hasOwnProperty("message")) {
+
+         $("#message").text(data.message);
+    }
+}
+
+function updateState(params) {
+
+    $.getJSON("${pageContext.request.contextPath}/gamestats?" + params, updateFields);
 }
 
 function newGame() {
 
-    $.getJSON("${pageContext.request.contextPath}/gamestats?newgame=true", updateFields);
+    updateState("newgame=true");
 }
+
+function guess() {
+
+    updateState("guesschar=" + document.getElementById("guessChar").value);
+}
+
+$(document).onload(updateState());
 
 </script>
 
