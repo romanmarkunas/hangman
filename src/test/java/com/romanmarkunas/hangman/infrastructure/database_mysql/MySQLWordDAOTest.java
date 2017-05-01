@@ -2,6 +2,7 @@ package com.romanmarkunas.hangman.infrastructure.database_mysql;
 
 import com.romanmarkunas.hangman.domain.Word;
 import com.romanmarkunas.hangman.services.WordDAO;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -28,6 +29,7 @@ public class MySQLWordDAOTest {
 
 
     @Before
+    @SuppressFBWarnings
     public void setUp() throws Exception {
 
         MockitoAnnotations.initMocks(this);
@@ -39,6 +41,7 @@ public class MySQLWordDAOTest {
     }
 
     @Test
+    @SuppressFBWarnings
     public void getWords() throws Exception {
 
         String secretWord = "lightsaber";
@@ -56,6 +59,7 @@ public class MySQLWordDAOTest {
     }
 
     @Test(expected = DataAccessException.class)
+    @SuppressFBWarnings
     public void getWordsFails() throws Exception {
 
         doThrow(SQLException.class).when(sourceMock).getConnection();
@@ -64,6 +68,7 @@ public class MySQLWordDAOTest {
     }
 
     @Test
+    @SuppressFBWarnings
     public void addWord() throws Exception {
 
         testInstance.addWord(wordMock);
@@ -72,6 +77,7 @@ public class MySQLWordDAOTest {
     }
 
     @Test
+    @SuppressFBWarnings
     public void removeWord() throws Exception {
 
         testInstance.removeWord(wordMock);
