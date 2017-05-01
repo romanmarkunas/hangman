@@ -39,7 +39,6 @@ public class MySQLHangmanGameStateDAO implements HangmanGameStateDAO {
                 );
     }
 
-    // TODO - catch Spring DataAccessException
     @Override
     public List<HangmanGameState> getGames() throws DAOException {
 

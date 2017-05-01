@@ -3,14 +3,13 @@ package com.romanmarkunas.hangman.infrastructure.controllers;
 import com.romanmarkunas.hangman.applications.hangmangame.HangmanGame;
 import com.romanmarkunas.hangman.domain.HangmanGameState;
 import com.romanmarkunas.hangman.services.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.*;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 public class HangmanController {
@@ -21,6 +20,7 @@ public class HangmanController {
     private WordDAO wordDao;
 
 
+    @Autowired
     public HangmanController(HangmanGameStateDAO gameStateDao, WordDAO wordDao) {
 
         this.gameStateDao = gameStateDao;
@@ -34,10 +34,9 @@ public class HangmanController {
         return "layout";
     }
 
-    // TODO - handle exceptions
     @RequestMapping(value="gamestats", method=RequestMethod.GET, produces="application/json")
     @ResponseBody
-    public Map<String, Object> getGameState(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public Map<String, Object> getGameState(HttpServletRequest request, HttpServletResponse response) {
 
         String startNewGame = request.getParameter("newgame");
         String guess = request.getParameter("guesschar");
@@ -45,26 +44,32 @@ public class HangmanController {
 
         Map<String, Object> jsonData = new HashMap<>();
 
-        if ("true".equals(startNewGame) && guess == null) {
+        try {
+            if ("true".equals(startNewGame) && guess == null) {
 
-            startNewGame(jsonData, response);
-        }
-        else if (cookie != null && guess != null) {
+                startNewGame(jsonData, response);
+            }
+            else if (cookie != null && guess != null) {
 
-            if (isValidChar(guess)) {
+                if (isValidChar(guess)) {
 
-                makeGuess(jsonData, response, Integer.parseInt(cookie.getValue()), guess);
+                    makeGuess(jsonData, response, Integer.parseInt(cookie.getValue()), guess);
+                }
+                else {
+                    jsonData.put("message", "Please try only english alphabet letters, one by one");
+                }
+            }
+            else if (cookie != null) {
+
+                refreshUserScreen(jsonData, Integer.parseInt(cookie.getValue()));
             }
             else {
-                jsonData.put("message", "Please try only english alphabet letters, one by one");
+                jsonData.put("message", "Ready to start new game!");
             }
         }
-        else if (cookie != null) {
+        catch (Exception exc) {
 
-            refreshUserScreen(jsonData, Integer.parseInt(cookie.getValue()));
-        }
-        else {
-            jsonData.put("message", "Bad request parameter combination!");
+            jsonData.put("message", "Internal server error. Please try again later");
         }
 
         return jsonData;
@@ -80,6 +85,12 @@ public class HangmanController {
         model.addAttribute("games", games);
 
         return "management";
+    }
+
+    @ExceptionHandler(Exception.class)
+    public String exceptionPage() {
+
+        return "error";
     }
 
 

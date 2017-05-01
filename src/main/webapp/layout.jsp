@@ -66,7 +66,7 @@ function guess() {
     updateState("guesschar=" + document.getElementById("guessChar").value);
 }
 
-$(document).onload(updateState());
+$(document).ready(updateState(""));
 
 </script>
 
