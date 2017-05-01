@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
@@ -16,6 +17,8 @@ import java.util.Map;
 
 @Controller
 public class HangmanController {
+
+    private static final String acceptedCookieName = "gameid";
 
     private HangmanGameStateDAO gameStateDao;
     private WordDAO wordDao;
@@ -40,27 +43,46 @@ public class HangmanController {
     public Map<String, Object> getGameState(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
         String startNewGame = request.getParameter("newgame");
-        String guessChar = request.getParameter("guesschar");
+//        String guessChar = request.getParameter("guesschar");
+//        Cookie cookie = getCookie(request);
 
         HangmanGame game;
-        int id = 0;
-        String secretWord = "";
+        Map<String, Object> jsonData = new HashMap<>();
 
         if ("true".equals(startNewGame)) {
 
-            secretWord = new RandomWord(wordDao.getWords()).getNext().getString();
+            String secretWord = new RandomWord(wordDao.getWords()).getNext().getString();
             game = new HangmanGame(secretWord, 5);
-            id = gameStateDao.createNewGame(game.getGameState());
+            int id = gameStateDao.createNewGame(game.getGameState());
+            response.addCookie(createCookie(id));
+
+            jsonData.put("revealed", game.getRevealedWord());
+            jsonData.put("triesleft", game.getTriesLeft());
+            jsonData.put("message", "started new game with id: " + id + " and word " + secretWord);
+        }
+
+        return jsonData;
+    }
+
+
+    private Cookie getCookie(HttpServletRequest request) {
+
+        Cookie[] cookies = request.getCookies();
+
+        if (cookies.length == 0 || cookies.length > 1 || !acceptedCookieName.equals(cookies[0].getName())) {
+
+            return null;
         }
         else {
-            game = new HangmanGame("gorilla", 3);
+            return cookies[0];
         }
+    }
 
-        Map<String, Object> data = new HashMap<>();
-        data.put("revealed", game.getRevealedWord());
-        data.put("message", "started new game with id: " + id + " and word " + secretWord);
-        data.put("triesleft", game.getTriesLeft());
+    private Cookie createCookie(int id) {
 
-        return data;
+        Cookie cookie = new Cookie(acceptedCookieName, Integer.toString(id));
+        cookie.setMaxAge(30*60);
+
+        return cookie;
     }
 }
