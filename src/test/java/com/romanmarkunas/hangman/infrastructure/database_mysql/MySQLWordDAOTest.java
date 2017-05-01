@@ -72,8 +72,6 @@ public class MySQLWordDAOTest {
     public void addWord() throws Exception {
 
         testInstance.addWord(wordMock);
-
-        verify(statementMock, times(1)).executeUpdate();
     }
 
     @Test
@@ -81,7 +79,5 @@ public class MySQLWordDAOTest {
     public void removeWord() throws Exception {
 
         testInstance.removeWord(wordMock);
-
-        verify(statementMock, times(1)).executeUpdate();
     }
 }

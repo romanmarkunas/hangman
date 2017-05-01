@@ -35,7 +35,7 @@ public class MySQLHangmanGameStateDAO implements HangmanGameStateDAO {
                         rs.getString("revealedword"),
                         rs.getInt("triesleft"),
                         rs.getString("notusedchars"),
-                        LocalDateTime.ofInstant(rs.getDate("expirydate").toInstant(), ZoneId.systemDefault())
+                        LocalDateTime.ofInstant(rs.getTimestamp("expirydate").toInstant(), ZoneId.systemDefault())
                 );
     }
 
@@ -62,7 +62,9 @@ public class MySQLHangmanGameStateDAO implements HangmanGameStateDAO {
 
         jdbcTemplate.update(sql, getParamsFromGameState(state), keyHolder);
 
-        return keyHolder.getKey().intValue();
+        Number key = keyHolder.getKey();
+
+        return key != null ? key.intValue() : 0;
     }
 
     @Override
