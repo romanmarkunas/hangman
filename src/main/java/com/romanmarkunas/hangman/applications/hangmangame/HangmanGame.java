@@ -1,7 +1,9 @@
 package com.romanmarkunas.hangman.applications.hangmangame;
 
-import java.util.LinkedList;
-import java.util.List;
+import com.romanmarkunas.hangman.domain.HangmanGameState;
+
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 public class HangmanGame {
 
@@ -9,10 +11,11 @@ public class HangmanGame {
     private char[] revealedWord;
     private int triesLeft;
     private int charsToGuess;
-    private List<Character> leftChars;
+    private char[] leftChars;
+    private int id;
 
 
-    HangmanGame(String secretWord, int tries) {
+    public HangmanGame(String secretWord, int tries) {
 
         this.triesLeft = tries;
         this.charsToGuess = secretWord.length();
@@ -24,18 +27,50 @@ public class HangmanGame {
             this.revealedWord[i] = '_';
         }
 
-        this.leftChars = new LinkedList<>();
+        this.leftChars = new char[26];
 
         for (int i = 0; i < 26; i++) {
 
-            this.leftChars.add((char)(97 + i));
+            this.leftChars[i] = (char)(97 + i);
         }
+
+        this.id = 0;
+    }
+
+    public HangmanGame(HangmanGameState state) {
+
+        this.triesLeft = state.getTriesLeft();
+        this.secretWord = state.getSecretWord().toCharArray();
+        this.revealedWord = state.getRevealedWord().toCharArray();
+        this.charsToGuess = 0;
+
+        for (int i = 0; i < this.revealedWord.length; i++) {
+
+            if (this.revealedWord[i] == '_') {
+
+                this.charsToGuess++;
+            }
+        }
+
+        this.leftChars = state.getNotUsedChars().toCharArray();
+        this.id = state.getId();
     }
 
 
     public boolean triedBefore(char c) {
 
-        return !leftChars.contains(Character.toLowerCase(c));
+        boolean contains = false;
+        char testChar = Character.toLowerCase(c);
+
+        for (char ch : leftChars) {
+
+            if (ch == testChar) {
+
+                contains = true;
+            }
+        }
+
+        return !contains;
     }
 
     public void guess(char c) {
@@ -57,7 +92,20 @@ public class HangmanGame {
 
         if (notGuessed) triesLeft--;
 
-        leftChars.remove(Character.valueOf(guessChar));
+        char[] temp = new char[leftChars.length - 1];
+        int index = 0;
+
+        // TODO - all these for loops is a good place for lambdas
+        for (char ch : leftChars) {
+
+            if (ch != guessChar) {
+
+                temp[index] = ch;
+                index++;
+            }
+        }
+
+        leftChars = temp;
     }
 
     public int getTriesLeft() { return triesLeft; }
@@ -74,4 +122,10 @@ public class HangmanGame {
     public boolean complete() { return (charsToGuess <= 0 || triesLeft <= 0); }
 
     public boolean playerWon() { return (charsToGuess <= 0 && triesLeft > 0); }
+
+    public HangmanGameState getGameState() {
+
+        return new HangmanGameState(id, String.valueOf(secretWord), String.valueOf(revealedWord), triesLeft,
+                String.valueOf(leftChars), LocalDateTime.now().plus(30, ChronoUnit.MINUTES));
+    }
 }

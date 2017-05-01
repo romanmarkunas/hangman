@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/sql" prefix="sql" %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
@@ -13,9 +14,6 @@
 <body>
 
     <p>Secret word:</p>
-    <p id="secretWord"></p>
-
-    <p>Your guess:</p>
     <p id="revealedWord"></p>
 
     <p>Tries left:</p>
@@ -24,12 +22,10 @@
     <p>Message:</p>
     <p id="message">Game not started yet</p>
 
-    <form>
-        <input type="text" name="guesschar"><br>
-        <input type="submit" value="Try this letter"><br><br>
-    </form>
+    <p> <input type="text" id="guessChar">
+        <button onclick="guess()">Guess letter</button> </p>
 
-    <button type="button">Start new game</button>
+    <button onclick="newGame()">Start new game</button>
 
 </body>
 
@@ -39,17 +35,38 @@
 
 function updateFields(data) {
 
-    console.log("launching updateFields");
-    alert(data.wordcount);
+    if (data.hasOwnProperty("revealed")) {
+
+        $("#revealedWord").text(data.revealed);
+    }
+
+    if (data.hasOwnProperty("triesleft")) {
+
+        $("#triesLeft").text(data.triesleft);
+    }
+
+    if (data.hasOwnProperty("message")) {
+
+         $("#message").text(data.message);
+    }
+}
+
+function updateState(params) {
+
+    $.getJSON("${pageContext.request.contextPath}/gamestats?" + params, updateFields);
 }
 
 function newGame() {
 
-    console.log("launching newGame");
-    $.getJSON("${pageContext.request.contextPath}/gamestats", updateFields);
+    updateState("newgame=true");
 }
 
-$(document).ready(newGame);
+function guess() {
+
+    updateState("guesschar=" + document.getElementById("guessChar").value);
+}
+
+$(document).ready(updateState(""));
 
 </script>
 

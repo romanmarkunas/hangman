@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Context>
+
+    <Resource name="jdbc/hangman" auth="Container" type="javax.sql.DataSource"
+              maxTotal="100" maxIdle="20" maxWaitMillis="10000"
+              username="root" password="testpass" driverClassName="com.mysql.jdbc.Driver"
+              url="jdbc:mysql://localhost:3306/hangman?useSSL=false"
+              factory="org.apache.tomcat.dbcp.dbcp2.BasicDataSourceFactory"/>
+
+</Context>

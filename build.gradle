@@ -28,6 +28,9 @@ repositories {
 dependencies {
     compile group: 'com.google.code.findbugs', name: 'annotations', version: '3.0.0'
     compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.38'
+    
+    // for local database management
+    compile group: 'org.apache.commons', name: 'commons-dbcp2', version: '2.1.1'
 
     def springVersion = '4.3.7.RELEASE'
     compile group: 'org.springframework', name: 'spring-core', version: "${springVersion}"
@@ -35,8 +38,10 @@ dependencies {
     compile group: 'org.springframework', name: 'spring-context', version: "${springVersion}"
     compile group: 'org.springframework', name: 'spring-web', version: "${springVersion}"
     compile group: 'org.springframework', name: 'spring-webmvc', version: "${springVersion}"
+    compile group: 'org.springframework', name: 'spring-jdbc', version: "${springVersion}"
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.8.7'
     compile group: 'javax.servlet', name: 'jstl', version: '1.2'
+    compile group: 'javax.servlet', name: 'javax.servlet-api', version: '3.1.0'
 
     testCompile group: 'junit', name: 'junit', version: '4.11'
     testCompile 'org.mockito:mockito-core:1.9.5'
@@ -45,5 +50,10 @@ dependencies {
     def tomcatVersion = '8.0.43'
     tomcat "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}",
             "org.apache.tomcat.embed:tomcat-embed-logging-juli:${tomcatVersion}",
-            "org.apache.tomcat.embed:tomcat-embed-jasper:${tomcatVersion}"
+            "org.apache.tomcat.embed:tomcat-embed-jasper:${tomcatVersion}",
+            "org.apache.tomcat:tomcat-dbcp:${tomcatVersion}"
+}
+
+tomcat {
+    ajpPort = 8443  // less commonly used by other applications => avoids clashes at startup
 }
