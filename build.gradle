@@ -28,7 +28,9 @@ repositories {
 dependencies {
     compile group: 'com.google.code.findbugs', name: 'annotations', version: '3.0.0'
     compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.38'
-//    compile group: 'org.apache.commons', name: 'commons-dbcp2', version: '2.1.1'
+    
+    // for local database management
+    compile group: 'org.apache.commons', name: 'commons-dbcp2', version: '2.1.1'
 
     def springVersion = '4.3.7.RELEASE'
     compile group: 'org.springframework', name: 'spring-core', version: "${springVersion}"
