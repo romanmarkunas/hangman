@@ -10,9 +10,9 @@ public interface HangmanGameStateDAO {
 
     HangmanGameState getGame(int id) throws DAOException;
 
-    int createNewGame() throws DAOException;
+    int createNewGame(HangmanGameState state) throws DAOException;
 
-    void updateGame(int id) throws DAOException;
+    void updateGame(HangmanGameState state) throws DAOException;
 
     void removeGame(int id) throws DAOException;
 
