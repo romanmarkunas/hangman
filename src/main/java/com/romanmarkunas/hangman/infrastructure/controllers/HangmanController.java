@@ -7,9 +7,10 @@ import com.romanmarkunas.hangman.services.WordDAO;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,13 +37,16 @@ public class HangmanController {
     // TODO - handle exceptions
     @RequestMapping(value="gamestats", method=RequestMethod.GET, produces="application/json")
     @ResponseBody
-    public Map<String, Object> getGameState(@RequestParam Map<String,String> allRequestParams) throws Exception {
+    public Map<String, Object> getGameState(HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+        String startNewGame = request.getParameter("newgame");
+        String guessChar = request.getParameter("guesschar");
 
         HangmanGame game;
         int id = 0;
         String secretWord = "";
 
-        if (allRequestParams.containsKey("newgame") && "true".equals(allRequestParams.get("newgame"))) {
+        if ("true".equals(startNewGame)) {
 
             secretWord = new RandomWord(wordDao.getWords()).getNext().getString();
             game = new HangmanGame(secretWord, 5);
